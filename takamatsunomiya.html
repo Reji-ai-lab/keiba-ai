@@ -1,232 +1,165 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta property="og:title" content="高松宮記念 10年データ分析 | HIVE">
-<meta property="og:description" content="過去10年・180頭のデータから導き出した「買うべき馬」の条件">
-<meta property="og:type" content="article">
-<title>高松宮記念 10年データ分析 | HIVE</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<meta property="og:description" content="過去10年・180頭のデータから「買うべき馬」の条件を解析">
+<title>🐝 HIVE ｜ 高松宮記念 10年データ分析</title>
 <style>
+:root{--g1:#00866e;--g2:#00b894;--g4:#b8f0df;--g5:#e8f9f3;--n1:#0d1b2a;--n2:#1b2d45;--n3:#34495e;--n4:#5c7a99;--gr2:#8899aa;--gr3:#b0bec5;--gr4:#dfe6ec;--gr5:#f4f6f8;--red:#d63031;--red2:#fff0f0;--blue:#2e86de;--amber:#e17055}
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0a0f;--card:#12121a;--card2:#1a1a26;
-  --gold:#d4a853;--gold2:#f0d78c;--gold-dim:#8b7335;
-  --accent:#e8443a;--accent2:#ff6b5e;
-  --blue:#3b82f6;--blue2:#60a5fa;
-  --green:#22c55e;--green2:#4ade80;
-  --text:#e8e6e1;--text2:#9b9890;--text3:#5a5850;
-  --border:#2a2a35;
-}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;line-height:1.6;overflow-x:hidden}
-.hero{position:relative;padding:60px 20px 40px;text-align:center;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,83,0.08) 0%,transparent 60%)}
-.hero-label{display:inline-block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dim);padding:4px 16px;border-radius:20px;margin-bottom:16px;font-weight:500}
-.hero h1{font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:-0.02em;margin-bottom:8px;background:linear-gradient(135deg,var(--gold2),var(--gold),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:14px;color:var(--text2);max-width:500px;margin:0 auto;font-weight:300}
-.container{max-width:720px;margin:0 auto;padding:0 16px 60px}
-
-.section{margin-bottom:40px}
-.section-head{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.section-num{font-size:11px;font-weight:700;color:var(--bg);background:var(--gold);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.section-title{font-size:16px;font-weight:700;letter-spacing:-0.01em}
-
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 12px;text-align:center}
-.stat-val{font-size:28px;font-weight:900;letter-spacing:-0.03em;margin-bottom:2px}
-.stat-label{font-size:11px;color:var(--text2);font-weight:400;line-height:1.3}
-.stat-sub{font-size:10px;color:var(--text3);margin-top:4px}
-.v-gold{color:var(--gold2)}.v-red{color:var(--accent2)}.v-blue{color:var(--blue2)}.v-green{color:var(--green2)}
-
-.combo-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
-.combo-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:8px 10px;border-bottom:1px solid var(--border);font-weight:500}
-.combo-table td{padding:10px;border-bottom:1px solid rgba(42,42,53,0.5);vertical-align:middle}
-.combo-table tr:hover{background:rgba(212,168,83,0.03)}
-.combo-rank{font-size:18px;font-weight:900;color:var(--gold);width:30px;text-align:center}
-.combo-cond{font-weight:500;font-size:12px;line-height:1.5}
-.combo-cond span{display:inline-block;background:var(--card2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;font-size:11px}
-.combo-rate{font-size:20px;font-weight:900;text-align:right;white-space:nowrap}
-
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
-.bar-label{width:80px;text-align:right;color:var(--text2);flex-shrink:0;font-weight:400}
-.bar-track{flex:1;height:24px;background:var(--card);border-radius:6px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:var(--bg);min-width:30px;transition:width 1s ease}
-.bar-val{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text2)}
-.bg-gold{background:linear-gradient(90deg,var(--gold),var(--gold2))}.bg-red{background:linear-gradient(90deg,var(--accent),var(--accent2))}.bg-blue{background:linear-gradient(90deg,var(--blue),var(--blue2))}.bg-green{background:linear-gradient(90deg,var(--green),var(--green2))}
-
-.kill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px}
-.kill-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
-.kill-card .kill-val{font-size:22px;font-weight:900;color:var(--accent2)}
-.kill-card .kill-label{font-size:11px;color:var(--text2);margin-top:2px}
-
-.rotation-table{width:100%;border-collapse:collapse;font-size:12px}
-.rotation-table th{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:8px;text-align:left;border-bottom:1px solid var(--border);font-weight:500}
-.rotation-table td{padding:8px;border-bottom:1px solid rgba(42,42,53,0.5)}
-.rotation-table .r-num{font-size:18px;font-weight:900;color:var(--gold);text-align:center}
-.rotation-table .r-name{font-weight:500}
-
-.factor-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
-.factor-rank{font-size:20px;font-weight:900;color:var(--gold);width:28px;text-align:center;flex-shrink:0}
+body{background:var(--gr5);color:var(--n1);font-family:sans-serif;padding:20px;max-width:800px;margin:0 auto}
+.hd{padding:20px 0 16px;margin-bottom:18px;border-bottom:2px solid var(--g2)}
+.hd h1{font-size:20px;font-weight:700}.hd .lo{background:var(--g1);color:#fff;padding:3px 10px;border-radius:5px;font-size:13px;display:inline-block}
+.hd .sub{color:var(--n3);font-size:12px;margin-top:4px;letter-spacing:1px}
+.hd .mt{color:var(--gr2);font-size:10px;margin-top:3px}
+.vh{font-size:13px;font-weight:700;color:var(--n2);margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--gr4)}
+.rc{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid var(--gr4)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat-card{background:#fff;border-radius:10px;padding:12px 8px;border:1px solid var(--gr4);text-align:center}
+.stat-val{font-size:24px;font-weight:700;margin-bottom:2px}
+.stat-label{font-size:10px;color:var(--gr2);line-height:1.3}
+.stat-sub{font-size:9px;color:var(--gr3);margin-top:2px}
+.v-g{color:var(--g1)}.v-r{color:var(--red)}.v-b{color:var(--blue)}.v-a{color:var(--amber)}
+.combo-tbl{width:100%;border-collapse:collapse}
+.combo-tbl th{text-align:left;color:var(--gr3);font-size:9px;padding:4px 6px;border-bottom:1px solid var(--gr4)}
+.combo-tbl td{padding:6px;border-bottom:1px solid var(--gr5);vertical-align:middle}
+.combo-rank{font-size:16px;font-weight:700;color:var(--g1);width:24px;text-align:center}
+.combo-cond{font-size:11px;color:var(--n3);line-height:1.5}
+.combo-cond .tag{display:inline-block;background:var(--gr5);border:1px solid var(--gr4);padding:1px 6px;border-radius:3px;font-size:10px;margin:1px 2px 1px 0;font-weight:500;color:var(--n2)}
+.combo-rate{font-size:16px;font-weight:700;color:var(--g1);text-align:right}
+.factor-row{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:4px;background:var(--gr5);border-radius:6px}
+.factor-rk{font-size:14px;font-weight:700;color:var(--g1);width:20px;text-align:center;flex-shrink:0}
 .factor-body{flex:1;min-width:0}
-.factor-name{font-size:13px;font-weight:500;margin-bottom:2px}
-.factor-vals{display:flex;gap:16px;font-size:11px;color:var(--text2)}
-.factor-diff{font-weight:700;color:var(--green2)}
-
-.check-list{list-style:none;padding:0}
-.check-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:13px;font-weight:400}
-.check-list li::before{content:'';width:18px;height:18px;border:2px solid var(--gold);border-radius:4px;flex-shrink:0;margin-top:1px}
-
-.footer{text-align:center;padding:30px 20px;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
-.footer .logo{font-size:18px;font-weight:900;color:var(--gold);margin-bottom:4px;letter-spacing:1px}
-
-.tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;margin-right:4px}
-.tag-gold{background:rgba(212,168,83,0.15);color:var(--gold2)}
-.tag-red{background:rgba(232,68,58,0.15);color:var(--accent2)}
-.tag-blue{background:rgba(59,130,246,0.15);color:var(--blue2)}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.section{animation:fadeUp 0.6s ease both}
-.section:nth-child(2){animation-delay:0.1s}.section:nth-child(3){animation-delay:0.2s}.section:nth-child(4){animation-delay:0.3s}.section:nth-child(5){animation-delay:0.4s}.section:nth-child(6){animation-delay:0.5s}.section:nth-child(7){animation-delay:0.6s}
+.factor-nm{font-size:11px;font-weight:600;color:var(--n2)}
+.factor-vals{font-size:10px;color:var(--gr2);display:flex;gap:10px;margin-top:1px}
+.factor-diff{font-weight:700;color:var(--g1)}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11px}
+.bar-label{width:50px;text-align:right;color:var(--n3);flex-shrink:0;font-size:10px;font-weight:500}
+.bar-track{flex:1;height:20px;background:var(--gr5);border-radius:4px;overflow:hidden;position:relative;border:1px solid var(--gr4)}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:24px}
+.bar-note{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--gr3)}
+.bg-g{background:var(--g1)}.bg-g2{background:var(--g2)}.bg-b{background:var(--blue)}.bg-r{background:var(--red)}.bg-a{background:var(--amber)}
+.kill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
+.kill-card{background:var(--red2);border-radius:8px;padding:10px;text-align:center;border:1px solid #fdd}
+.kill-val{font-size:20px;font-weight:700;color:var(--red)}
+.kill-label{font-size:10px;color:var(--n3);margin-top:2px;line-height:1.3}
+.rot-tbl{width:100%;border-collapse:collapse}
+.rot-tbl th{text-align:left;color:var(--gr3);font-size:9px;padding:4px 6px;border-bottom:1px solid var(--gr4)}
+.rot-tbl td{padding:5px 6px;border-bottom:1px solid var(--gr5);font-size:11px}
+.rot-num{font-size:16px;font-weight:700;color:var(--g1);text-align:center;width:28px}
+.rot-name{font-weight:600;color:var(--n2)}
+.rot-note{font-size:10px;color:var(--gr2)}
+.chk-list{list-style:none;padding:0}
+.chk-list li{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;margin-bottom:4px;background:var(--g5);border-radius:6px;font-size:11px;color:var(--n2);border:1px solid var(--g4)}
+.chk-list li::before{content:'';width:14px;height:14px;border:2px solid var(--g2);border-radius:3px;flex-shrink:0;margin-top:1px}
+.chk-rate{font-size:10px;color:var(--g1);font-weight:600;margin-left:4px}
+.ft{margin-top:20px;padding-top:12px;border-top:1px solid var(--gr4);color:var(--gr3);font-size:9px;line-height:2;text-align:center}
+.ft .hl{color:var(--g1);font-weight:600;font-size:10px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--g1);color:#fff;font-size:9px;font-weight:700;margin-right:6px}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-label">🐝 HIVE DATA ANALYSIS</div>
-  <h1>高松宮記念<br>10年データ分析</h1>
-  <p>2016-2025年・全180頭のデータから「3着以内に来る馬」の条件を解析</p>
+<div class="hd">
+  <div><span class="lo">🐝 HIVE</span></div>
+  <h1 style="margin-top:8px">高松宮記念 10年データ分析</h1>
+  <div class="sub">2016-2025年 ｜ 全180頭 ｜ 中京芝1200m G1</div>
+  <div class="mt">過去10年のデータから「3着以内に来る馬」の条件を解析</div>
 </div>
 
-<div class="container">
-
-<!-- 1. 概要 -->
-<div class="section">
-  <div class="section-head"><div class="section-num">1</div><div class="section-title">荒れるG1スプリント</div></div>
-  <div class="stat-grid">
-    <div class="stat-card"><div class="stat-val v-red">10%</div><div class="stat-label">1番人気勝率</div><div class="stat-sub">1-2-1-6</div></div>
-    <div class="stat-card"><div class="stat-val v-gold">5.0</div><div class="stat-label">勝ち馬の<br>平均人気</div></div>
-    <div class="stat-card"><div class="stat-val v-blue">7/10</div><div class="stat-label">牝馬が<br>3着以内</div></div>
-  </div>
+<div class="vh"><span class="sec-num">1</span>荒れるG1スプリント</div>
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-val v-r">10%</div><div class="stat-label">1番人気勝率</div><div class="stat-sub">1-2-1-6</div></div>
+  <div class="stat-card"><div class="stat-val v-a">5.0</div><div class="stat-label">勝ち馬の平均人気</div></div>
+  <div class="stat-card"><div class="stat-val v-b">7/10</div><div class="stat-label">牝馬が3着以内</div></div>
 </div>
 
-<!-- 2. 最強の条件組み合わせ -->
-<div class="section">
-  <div class="section-head"><div class="section-num">2</div><div class="section-title">買うべき馬の条件 TOP3</div></div>
-  <table class="combo-table">
-    <tr><th></th><th>条件</th><th style="text-align:right">3着以内率</th></tr>
-    <tr>
-      <td class="combo-rank">1</td>
-      <td class="combo-cond"><span>人気5番以内</span><span>上がり34秒以内率50%+</span></td>
-      <td class="combo-rate v-gold">52.4%</td>
-    </tr>
-    <tr>
-      <td class="combo-rank">2</td>
-      <td class="combo-cond"><span>人気5番以内</span><span>牝馬</span></td>
-      <td class="combo-rate v-gold">50.0%</td>
-    </tr>
-    <tr>
-      <td class="combo-rank">3</td>
-      <td class="combo-cond"><span>前走G1/G2</span><span>1200m複勝率50%+</span></td>
-      <td class="combo-rate v-gold">50.0%</td>
-    </tr>
-    <tr>
-      <td class="combo-rank" style="color:var(--text3)">4</td>
-      <td class="combo-cond"><span>上がり34秒以内率50%+</span><span>1200mハイペース経験</span></td>
-      <td class="combo-rate" style="color:var(--text2)">45.5%</td>
-    </tr>
-    <tr>
-      <td class="combo-rank" style="color:var(--text3)">5</td>
-      <td class="combo-cond"><span>人気5番以内</span><span>過去走平均上がり34.5以内</span></td>
-      <td class="combo-rate" style="color:var(--text2)">44.1%</td>
-    </tr>
+<div class="vh"><span class="sec-num">2</span>買うべき馬の条件 TOP5</div>
+<div class="rc">
+  <table class="combo-tbl">
+    <tr><th></th><th>条件の組み合わせ</th><th style="text-align:right">3着以内率</th></tr>
+    <tr><td class="combo-rank">1</td><td class="combo-cond"><span class="tag">人気5番以内</span><span class="tag">上がり34秒以内率50%+</span></td><td class="combo-rate">52.4%</td></tr>
+    <tr><td class="combo-rank">2</td><td class="combo-cond"><span class="tag">人気5番以内</span><span class="tag">牝馬</span></td><td class="combo-rate">50.0%</td></tr>
+    <tr><td class="combo-rank">3</td><td class="combo-cond"><span class="tag">前走G1/G2</span><span class="tag">1200m複勝率50%+</span></td><td class="combo-rate">50.0%</td></tr>
+    <tr><td class="combo-rank" style="color:var(--gr2)">4</td><td class="combo-cond"><span class="tag">上がり34秒以内率50%+</span><span class="tag">1200mハイペース経験</span></td><td class="combo-rate" style="color:var(--n4)">45.5%</td></tr>
+    <tr><td class="combo-rank" style="color:var(--gr2)">5</td><td class="combo-cond"><span class="tag">人気5番以内</span><span class="tag">過去走平均上がり34.5以内</span></td><td class="combo-rate" style="color:var(--n4)">44.1%</td></tr>
   </table>
 </div>
 
-<!-- 3. 差が大きい指標 -->
-<div class="section">
-  <div class="section-head"><div class="section-num">3</div><div class="section-title">3着以内 vs 4着以下 差が大きい指標</div></div>
-  <div class="factor-row"><div class="factor-rank">1</div><div class="factor-body"><div class="factor-name">G1複勝率</div><div class="factor-vals"><span>3着以内: 30.0%</span><span>4着以下: 12.1%</span><span class="factor-diff">+17.9%</span></div></div></div>
-  <div class="factor-row"><div class="factor-rank">2</div><div class="factor-body"><div class="factor-name">重賞複勝率</div><div class="factor-vals"><span>3着以内: 53.9%</span><span>4着以下: 37.7%</span><span class="factor-diff">+16.2%</span></div></div></div>
-  <div class="factor-row"><div class="factor-rank">3</div><div class="factor-body"><div class="factor-name">過去走 複勝率</div><div class="factor-vals"><span>3着以内: 57.3%</span><span>4着以下: 40.8%</span><span class="factor-diff">+16.5%</span></div></div></div>
-  <div class="factor-row"><div class="factor-rank">4</div><div class="factor-body"><div class="factor-name">ハイペース好走率</div><div class="factor-vals"><span>3着以内: 56.9%</span><span>4着以下: 43.9%</span><span class="factor-diff">+13.0%</span></div></div></div>
-  <div class="factor-row"><div class="factor-rank">5</div><div class="factor-body"><div class="factor-name">上がり34秒以内率</div><div class="factor-vals"><span>3着以内: 42.2%</span><span>4着以下: 29.7%</span><span class="factor-diff">+12.4%</span></div></div></div>
+<div class="vh"><span class="sec-num">3</span>3着以内 vs 4着以下 差が大きい指標</div>
+<div class="rc" style="padding:10px">
+  <div class="factor-row"><div class="factor-rk">1</div><div class="factor-body"><div class="factor-nm">G1複勝率</div><div class="factor-vals"><span>3着以内: 30.0%</span><span>4着以下: 12.1%</span><span class="factor-diff">+17.9%</span></div></div></div>
+  <div class="factor-row"><div class="factor-rk">2</div><div class="factor-body"><div class="factor-nm">重賞複勝率</div><div class="factor-vals"><span>3着以内: 53.9%</span><span>4着以下: 37.7%</span><span class="factor-diff">+16.2%</span></div></div></div>
+  <div class="factor-row"><div class="factor-rk">3</div><div class="factor-body"><div class="factor-nm">過去走 複勝率</div><div class="factor-vals"><span>3着以内: 57.3%</span><span>4着以下: 40.8%</span><span class="factor-diff">+16.5%</span></div></div></div>
+  <div class="factor-row"><div class="factor-rk">4</div><div class="factor-body"><div class="factor-nm">ハイペース好走率</div><div class="factor-vals"><span>3着以内: 56.9%</span><span>4着以下: 43.9%</span><span class="factor-diff">+13.0%</span></div></div></div>
+  <div class="factor-row"><div class="factor-rk">5</div><div class="factor-body"><div class="factor-nm">上がり34秒以内率</div><div class="factor-vals"><span>3着以内: 42.2%</span><span>4着以下: 29.7%</span><span class="factor-diff">+12.4%</span></div></div></div>
 </div>
 
-<!-- 4. 脚質・枠・年齢 -->
-<div class="section">
-  <div class="section-head"><div class="section-num">4</div><div class="section-title">脚質・枠番・馬齢</div></div>
-
-  <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px">脚質別 3着以内率</div>
-  <div class="bar-row"><div class="bar-label">差し</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:44.8%">22.4%</div></div></div>
-  <div class="bar-row"><div class="bar-label">先行</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:41.2%">20.6%</div></div></div>
-  <div class="bar-row"><div class="bar-label">逃げ</div><div class="bar-track"><div class="bar-fill bg-blue" style="width:40%">20.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">追込</div><div class="bar-track"><div class="bar-fill bg-red" style="width:8%">4.0%</div><div class="bar-val"><span class="tag tag-red">消し</span></div></div></div>
-
-  <div style="font-size:12px;font-weight:500;color:var(--text2);margin:20px 0 8px">枠番別 3着以内率</div>
-  <div class="bar-row"><div class="bar-label">2枠</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:60%">30.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">4枠</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:60%">30.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">5枠</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:60%">30.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">7枠</div><div class="bar-track"><div class="bar-fill bg-blue" style="width:33.4%">16.7%</div></div></div>
-  <div class="bar-row"><div class="bar-label">1枠</div><div class="bar-track"><div class="bar-fill bg-blue" style="width:30%">15.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">3枠</div><div class="bar-track"><div class="bar-fill bg-blue" style="width:20%">10.0%</div></div></div>
-  <div class="bar-row"><div class="bar-label">8枠</div><div class="bar-track"><div class="bar-fill bg-red" style="width:13.4%">6.7%</div></div></div>
-  <div class="bar-row"><div class="bar-label">6枠</div><div class="bar-track"><div class="bar-fill bg-red" style="width:2%"></div><div class="bar-val"><span class="tag tag-red">0% 死に枠</span></div></div></div>
-
-  <div style="font-size:12px;font-weight:500;color:var(--text2);margin:20px 0 8px">馬齢別 3着以内率</div>
-  <div class="bar-row"><div class="bar-label">6歳</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:51.2%">25.6%</div></div></div>
-  <div class="bar-row"><div class="bar-label">5歳</div><div class="bar-track"><div class="bar-fill bg-gold" style="width:39.2%">19.6%</div></div></div>
-  <div class="bar-row"><div class="bar-label">4歳</div><div class="bar-track"><div class="bar-fill bg-blue" style="width:31.6%">15.8%</div></div></div>
-  <div class="bar-row"><div class="bar-label">7歳</div><div class="bar-track"><div class="bar-fill bg-red" style="width:15.4%">7.7%</div></div></div>
-  <div class="bar-row"><div class="bar-label">8歳</div><div class="bar-track"><div class="bar-fill bg-red" style="width:13.4%">6.7%</div></div></div>
+<div class="vh"><span class="sec-num">4</span>脚質・枠番・馬齢</div>
+<div class="rc">
+  <div style="font-size:10px;font-weight:600;color:var(--gr2);margin-bottom:6px">脚質別 3着以内率</div>
+  <div class="bar-row"><div class="bar-label">差し</div><div class="bar-track"><div class="bar-fill bg-g" style="width:67%">22.4%</div></div></div>
+  <div class="bar-row"><div class="bar-label">先行</div><div class="bar-track"><div class="bar-fill bg-g2" style="width:62%">20.6%</div></div></div>
+  <div class="bar-row"><div class="bar-label">逃げ</div><div class="bar-track"><div class="bar-fill bg-b" style="width:60%">20.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">追込</div><div class="bar-track"><div class="bar-fill bg-r" style="width:12%">4.0%</div><div class="bar-note">消し</div></div></div>
+  <div style="font-size:10px;font-weight:600;color:var(--gr2);margin:14px 0 6px">枠番別 3着以内率</div>
+  <div class="bar-row"><div class="bar-label">2枠</div><div class="bar-track"><div class="bar-fill bg-g" style="width:60%">30.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">4枠</div><div class="bar-track"><div class="bar-fill bg-g" style="width:60%">30.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">5枠</div><div class="bar-track"><div class="bar-fill bg-g" style="width:60%">30.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">7枠</div><div class="bar-track"><div class="bar-fill bg-b" style="width:33%">16.7%</div></div></div>
+  <div class="bar-row"><div class="bar-label">1枠</div><div class="bar-track"><div class="bar-fill bg-b" style="width:30%">15.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">3枠</div><div class="bar-track"><div class="bar-fill bg-a" style="width:20%">10.0%</div></div></div>
+  <div class="bar-row"><div class="bar-label">8枠</div><div class="bar-track"><div class="bar-fill bg-r" style="width:13%">6.7%</div></div></div>
+  <div class="bar-row"><div class="bar-label">6枠</div><div class="bar-track"><div class="bar-fill bg-r" style="width:2%"></div><div class="bar-note">0% 死に枠</div></div></div>
+  <div style="font-size:10px;font-weight:600;color:var(--gr2);margin:14px 0 6px">馬齢別 3着以内率</div>
+  <div class="bar-row"><div class="bar-label">6歳</div><div class="bar-track"><div class="bar-fill bg-g" style="width:51%">25.6%</div></div></div>
+  <div class="bar-row"><div class="bar-label">5歳</div><div class="bar-track"><div class="bar-fill bg-g2" style="width:39%">19.6%</div></div></div>
+  <div class="bar-row"><div class="bar-label">4歳</div><div class="bar-track"><div class="bar-fill bg-b" style="width:32%">15.8%</div></div></div>
+  <div class="bar-row"><div class="bar-label">7歳</div><div class="bar-track"><div class="bar-fill bg-r" style="width:15%">7.7%</div></div></div>
+  <div class="bar-row"><div class="bar-label">8歳</div><div class="bar-track"><div class="bar-fill bg-r" style="width:13%">6.7%</div></div></div>
 </div>
 
-<!-- 5. 消せる馬 -->
-<div class="section">
-  <div class="section-head"><div class="section-num">5</div><div class="section-title">消せる馬の条件</div></div>
-  <div class="kill-grid">
-    <div class="kill-card"><div class="kill-val">4.0%</div><div class="kill-label">追込脚質<br>50頭中2頭のみ</div></div>
-    <div class="kill-card"><div class="kill-val">0.0%</div><div class="kill-label">6枠<br>19頭中0頭</div></div>
-    <div class="kill-card"><div class="kill-val">6.7%</div><div class="kill-label">8枠<br>30頭中2頭</div></div>
-    <div class="kill-card"><div class="kill-val">7.3%</div><div class="kill-label">7歳以上<br>41頭中3頭</div></div>
-    <div class="kill-card"><div class="kill-val">5.1%</div><div class="kill-label">13番人気以下<br>59頭中3頭</div></div>
-  </div>
+<div class="vh"><span class="sec-num">5</span>消せる馬の条件</div>
+<div class="kill-grid">
+  <div class="kill-card"><div class="kill-val">4.0%</div><div class="kill-label">追込脚質<br><span style="font-size:9px;color:var(--gr3)">50頭中2頭</span></div></div>
+  <div class="kill-card"><div class="kill-val">0.0%</div><div class="kill-label">6枠<br><span style="font-size:9px;color:var(--gr3)">19頭中0頭</span></div></div>
+  <div class="kill-card"><div class="kill-val">6.7%</div><div class="kill-label">8枠<br><span style="font-size:9px;color:var(--gr3)">30頭中2頭</span></div></div>
+  <div class="kill-card"><div class="kill-val">7.3%</div><div class="kill-label">7歳以上<br><span style="font-size:9px;color:var(--gr3)">41頭中3頭</span></div></div>
+  <div class="kill-card"><div class="kill-val">5.1%</div><div class="kill-label">13番人気以下<br><span style="font-size:9px;color:var(--gr3)">59頭中3頭</span></div></div>
 </div>
 
-<!-- 6. 前走ローテーション -->
-<div class="section">
-  <div class="section-head"><div class="section-num">6</div><div class="section-title">前走ローテーション（30頭の80%）</div></div>
-  <table class="rotation-table">
+<div class="vh"><span class="sec-num">6</span>前走ローテーション（30頭の80%）</div>
+<div class="rc">
+  <table class="rot-tbl">
     <tr><th></th><th>前走</th><th>頭数</th><th>特徴</th></tr>
-    <tr><td class="r-num">8</td><td class="r-name">シルクロードS</td><td>8/30</td><td style="font-size:11px;color:var(--text2)">1200m直行の王道</td></tr>
-    <tr><td class="r-num">5</td><td class="r-name">阪急杯</td><td>5/30</td><td style="font-size:11px;color:var(--text2)">1400m組。差し馬に多い</td></tr>
-    <tr><td class="r-num">5</td><td class="r-name">オーシャンS</td><td>5/30</td><td style="font-size:11px;color:var(--text2)">穴馬がここから</td></tr>
-    <tr><td class="r-num">4</td><td class="r-name">香港スプリント</td><td>4/30</td><td style="font-size:11px;color:var(--text2)">海外組。勝ち馬多い</td></tr>
-    <tr><td class="r-num">3</td><td class="r-name">京都牝馬S</td><td>3/30</td><td style="font-size:11px;color:var(--text2)">牝馬専用ルート</td></tr>
+    <tr><td class="rot-num">8</td><td class="rot-name">シルクロードS</td><td>8/30</td><td class="rot-note">1200m直行の王道</td></tr>
+    <tr><td class="rot-num">5</td><td class="rot-name">阪急杯</td><td>5/30</td><td class="rot-note">1400m組。差し馬に多い</td></tr>
+    <tr><td class="rot-num">5</td><td class="rot-name">オーシャンS</td><td>5/30</td><td class="rot-note">穴馬がここから出る</td></tr>
+    <tr><td class="rot-num">4</td><td class="rot-name">香港スプリント</td><td>4/30</td><td class="rot-note">海外組。勝ち馬多い</td></tr>
+    <tr><td class="rot-num">3</td><td class="rot-name">京都牝馬S</td><td>3/30</td><td class="rot-note">牝馬専用ルート</td></tr>
   </table>
 </div>
 
-<!-- 7. チェックリスト -->
-<div class="section">
-  <div class="section-head"><div class="section-num">7</div><div class="section-title">出馬表チェックリスト</div></div>
-  <ul class="check-list">
-    <li>人気5番以内（3着以内率 40.0%）</li>
-    <li>過去走で上がり34秒以内を50%以上使えている（27.5%）</li>
-    <li>重賞で複勝率30%以上（20.9%）</li>
-    <li>前走5着以内（23.3%）</li>
+<div class="vh"><span class="sec-num">7</span>出馬表チェックリスト</div>
+<div class="rc" style="padding:10px">
+  <ul class="chk-list">
+    <li>人気5番以内<span class="chk-rate">（3着以内率 40.0%）</span></li>
+    <li>過去走で上がり34秒以内を50%以上使えている<span class="chk-rate">（27.5%）</span></li>
+    <li>重賞で複勝率30%以上<span class="chk-rate">（20.9%）</span></li>
+    <li>前走5着以内<span class="chk-rate">（23.3%）</span></li>
     <li>前走がシルクロードS / 阪急杯 / オーシャンS / 香港スプリント / 京都牝馬S</li>
-    <li>追込脚質は消し（3着以内率 4.0%）</li>
-    <li>6枠は割引（0%）、2/4/5枠は加点（30%）</li>
-    <li>6歳がピーク（25.6%）、7歳以上は割引</li>
+    <li>追込脚質は消し<span class="chk-rate" style="color:var(--red)">（4.0%）</span></li>
+    <li>6枠は割引<span class="chk-rate" style="color:var(--red)">（0%）</span>、2/4/5枠は加点<span class="chk-rate">（30%）</span></li>
+    <li>6歳がピーク<span class="chk-rate">（25.6%）</span>、7歳以上は割引</li>
   </ul>
 </div>
 
-</div>
-
-<div class="footer">
-  <div class="logo">🐝 HIVE</div>
-  <div>AI競馬予測システム ｜ 過去10年・180頭のデータ分析</div>
-  <div style="margin-top:8px;color:var(--text3)">※本分析は過去データの統計であり、将来の結果を保証するものではありません</div>
+<div class="ft">
+  <p class="hl">🐝 HIVE ｜ AI競馬予測システム</p>
+  <p>過去10年・180頭のデータ分析 ｜ 2016-2025年 中京芝1200m</p>
+  <p>※本分析は過去データの統計であり、将来の結果を保証するものではありません</p>
 </div>
 
 </body>
