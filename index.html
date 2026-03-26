@@ -35,38 +35,25 @@ const ARCHIVE_WEEKS = [
   }
 ];
 
-// 今週（saturday/sunday.htmlからfetch）
+// 今週の週ラベルとURL（毎週ここだけ更新）
 const CURRENT_WEEK = {
   label: '第2週', dates: '0328 / 0329',
   sat_url: 'saturday.html', sun_url: 'sunday.html'
 };
 
-function extractResults(html) {
-  const m = html.match(/var RESULTS=(\{[\s\S]*?\});/);
-  if (!m) return { invest: 0, ret: 0 };
-  try {
-    const obj = JSON.parse(m[1]);
-    let invest = 0, ret = 0;
-    Object.values(obj).forEach(v => { invest += v.invest||0; ret += v['return']||0; });
-    return { invest, ret };
-  } catch(e) { return { invest: 0, ret: 0 }; }
-}
-
 async function init() {
-  // 今週分をfetchして集計
-  let curInvest = 0, curRet = 0;
-  for (const url of [CURRENT_WEEK.sat_url, CURRENT_WEEK.sun_url]) {
-    try {
-      const r = await fetch(url);
-      const d = extractResults(await r.text());
-      curInvest += d.invest; curRet += d.ret;
-    } catch(e) {}
-  }
+  // 今週分はresults_current.jsonから取得
+  let cur = { invest: 0, ret: 0, races: 0, hit_races: 0, tickets: {} };
+  try {
+    const r = await fetch('results_current.json?t=' + Date.now());
+    cur = await r.json();
+  } catch(e) {}
 
-  // 全週
+  // 全週まとめ
   const weeks = [...ARCHIVE_WEEKS];
-  if (curInvest > 0) weeks.push({ ...CURRENT_WEEK, invest: curInvest, ret: curRet });
+  if (cur.invest > 0) weeks.push({ ...CURRENT_WEEK, invest: cur.invest, ret: cur.ret });
 
+  // アーカイブ分の集計（tickets情報はresults_current.jsonの今週分のみ）
   const totalInvest = weeks.reduce((s,w) => s+w.invest, 0);
   const totalRet    = weeks.reduce((s,w) => s+w.ret, 0);
   const totalROI    = totalInvest > 0 ? totalRet/totalInvest*100 : 0;
@@ -78,10 +65,18 @@ async function init() {
     roiEl.className = 'hero-val' + (totalROI < 100 ? ' neg' : '');
   }
 
-  // 投資・回収額
+  // 投資・回収
   const cells = document.querySelectorAll('.cell-val');
   if (cells[0]) cells[0].textContent = '¥' + totalInvest.toLocaleString();
   if (cells[1]) cells[1].textContent = '¥' + totalRet.toLocaleString();
+
+  // レース数・的中率（今週分のみ集計）
+  const totalRaces = weeks.reduce((s,w) => s+(w.races||0), 0);
+  const totalHits  = weeks.reduce((s,w) => s+(w.hit_races||0), 0);
+  document.querySelectorAll('.cell-val').forEach((el, i) => {
+    if (i === 2 && totalRaces > 0) el.textContent = totalRaces + 'R';
+    if (i === 3 && totalRaces > 0) el.textContent = (totalHits/totalRaces*100).toFixed(1) + '%';
+  });
 
   // 更新日時
   const now = new Date();
@@ -93,8 +88,12 @@ async function init() {
     String(now.getMinutes()).padStart(2,'0');
 
   // WEEKLYテーブル再構築
-  const tbody = document.querySelector('.sec:last-of-type table tbody');
+  const allTables = document.querySelectorAll('table');
+  const weeklyTable = allTables[allTables.length - 1];
+  if (!weeklyTable) return;
+  const tbody = weeklyTable.querySelector('tbody');
   if (!tbody) return;
+
   tbody.innerHTML = '';
   weeks.forEach((w, i) => {
     const roi = w.invest > 0 ? w.ret/w.invest*100 : 0;
