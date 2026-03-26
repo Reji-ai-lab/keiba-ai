@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐝 HIVE｜高松宮記念2026 世代強度分析</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #fff;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  /* ── ヘッダー ── */
+  .site-header {
+    text-align: center;
+    padding: 24px 0 20px;
+    border-bottom: 2px solid #1a1a1a;
+    margin-bottom: 24px;
+  }
+  .site-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .site-tagline {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .site-meta {
+    font-size: 11px;
+    color: #888;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+
+  /* ── セクション ── */
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    border-left: 4px solid #1a1a1a;
+    padding-left: 10px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .section-sub {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+    padding-left: 14px;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    background: #f8f8f8;
+    border-radius: 4px;
+    line-height: 1.7;
+  }
+
+  /* ── グラフ ── */
+  .chart-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #fff;
+  }
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* ── インサイト ── */
+  .insight {
+    font-size: 12px;
+    line-height: 1.8;
+    padding: 10px 14px;
+    background: #fffbf0;
+    border-left: 3px solid #f5a623;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 4px;
+  }
+  .insight.blue { background: #f0f6ff; border-left-color: #3b82f6; }
+  .insight.red  { background: #fff5f5; border-left-color: #ef4444; }
+  .insight b { font-weight: 700; }
+
+  /* ── テーブル ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .data-table th {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 7px 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .data-table td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .data-table td.left { text-align: left; }
+  .data-table tr.hl-orange { background: #fff8f0; }
+  .data-table tr.hl-green  { background: #f0fff8; }
+  .data-table tr.hl-red    { background: #fff5f5; }
+  .num-strong { font-weight: 700; }
+  .num-orange { color: #e07800; font-weight: 700; }
+  .num-green  { color: #059669; font-weight: 700; }
+  .num-red    { color: #dc2626; font-weight: 700; }
+  .num-muted  { color: #999; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .badge-orange { background: #fff0d9; color: #b45309; }
+  .badge-green  { background: #d1fae5; color: #065f46; }
+  .badge-red    { background: #fee2e2; color: #991b1b; }
+  .badge-gray   { background: #f3f4f6; color: #6b7280; }
+  .badge-gold   { background: #fef9c3; color: #92400e; }
+
+  /* ── 凡例 ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 11px;
+    margin-bottom: 12px;
+    color: #444;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── 区切り ── */
+  .divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 32px 0;
+  }
+
+  /* ── フッター ── */
+  .footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 2px solid #1a1a1a;
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .footer .tags {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .footer .tag {
+    background: #f4f4f4;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: #555;
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 16px 12px 40px; }
+    .site-title { font-size: 24px; }
+    .data-table { font-size: 11px; }
+    .data-table th, .data-table td { padding: 6px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="site-header">
+  <div class="site-title">🐝 HIVE 🐝</div>
+  <div class="site-tagline">レースの蜜を集める競馬AI</div>
+  <div class="site-meta">
+    特別分析 ｜ 高松宮記念2026（3/29 中京11R G1）<br>
+    JRAデータ 2010〜2026 ／ 芝1400m以下オープン以上
+  </div>
+</div>
+
+<!-- ANALYSIS 01 -->
+<div class="section">
+  <div class="section-title">各世代の4・5・6歳時 芝スプリント勝率</div>
+  <div class="section-sub">オープン以上・芝1400m以下・通年 ／ 同一レース内の対他世代勝率</div>
+  <div class="section-desc">
+    年齢バイアスを除去するため「同じ馬齢の時の世代間成績」で比較。<br>
+    50%超 = その年齢の全世代平均より強い
+  </div>
+
+  <div id="legend1" class="legend"></div>
+  <div class="chart-box">
+    <div class="chart-wrap" style="height:260px">
+      <canvas id="chart1"></canvas>
+    </div>
+  </div>
+  <div class="insight">
+    <b>2021年世代（今年5歳）が4歳57.1%・5歳52.5%と唯一2期連続50%超。</b><br>
+    2019年世代（今年7歳）は4歳55.1%→5歳47.9%→6歳47.9%と5歳以降は平均以下。オープン以上全体では「2019年世代が一貫して強い」とは言えない。<br>
+    2020年世代（今年6歳）は5歳44.8%・6歳42.2%と急落。ルガル・ビッグシーザーへの世代補正は不要。
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ANALYSIS 02 -->
+<div class="section">
+  <div class="section-title">各世代 4歳1〜3月 芝スプリント勝率</div>
+  <div class="section-sub">オープン以上・芝1400m以下・高松宮記念除く ／ 対同レース全出走馬</div>
+  <div class="section-desc">
+    各世代が4歳の1〜3月に出走した芝スプリント（オープン以上）での勝率。<br>
+    今年の2022年世代（パンジャタワー・レイピア）のデータを含む。
+  </div>
+  <div class="chart-box">
+    <div class="chart-wrap" style="height:240px">
+      <canvas id="chart2"></canvas>
+    </div>
+  </div>
+  <div class="insight">
+    <b>2021年世代が60.0%でトップ（n=88）。2022年世代は57.3%で中位（n=78）。</b><br>
+    2019年世代（今年7歳）は4歳春57.0%で中位 — 若い頃は突出しておらず、晩成型の世代特性が見える。
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ANALYSIS 03 -->
+<div class="section">
+  <div class="section-title">4歳春スプリント成績 × 高松宮記念（4歳時）の相関</div>
+  <div class="section-sub">相関係数 r = −0.222（ほぼ無相関）</div>
+  <div class="section-desc">
+    各世代が4歳春に記録したスプリント勝率と、同年の高松宮記念（4歳として出走）での成績の相関。<br>
+    2022年世代は今年が初の高松宮記念出走。
+  </div>
+  <div class="chart-box">
+    <div class="chart-wrap" style="height:280px">
+      <canvas id="chart3"></canvas>
+    </div>
+  </div>
+  <div class="insight red">
+    <b>相関係数 −0.222：ほぼ無相関。</b><br>
+    4歳春の世代成績が良くても高松宮記念での成功は保証されない。特に2021年世代は4歳春60.0%トップながら高松宮では9.4%と真逆の結果。各世代の高松宮出走数が2〜5頭と少なく、世代単位の傾向把握には限界がある。
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SUMMARY TABLE -->
+<div class="section">
+  <div class="section-title">出走世代 データサマリー</div>
+  <div class="section-sub">各世代の統計的位置づけと今年の登録馬</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>世代</th>
+        <th>主な登録馬</th>
+        <th>4歳時<br>勝率</th>
+        <th>5歳時<br>勝率</th>
+        <th>6歳時<br>勝率</th>
+        <th>4歳春<br>勝率</th>
+        <th>評価</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hl-green">
+        <td class="left"><b>2021年</b><br><span style="font-size:10px;color:#666">今年5歳</span></td>
+        <td class="left" style="font-size:11px;line-height:1.5">ヤマニンアルリフラ<br>ジューンブレア 他6頭</td>
+        <td><span class="num-green">57.1%</span></td>
+        <td><span class="num-green">52.5%</span></td>
+        <td><span class="num-muted">—</span></td>
+        <td><span class="num-green">60.0%</span></td>
+        <td><span class="badge badge-green">4.5歳安定</span></td>
+      </tr>
+      <tr>
+        <td class="left"><b>2019年</b><br><span style="font-size:10px;color:#666">今年7歳</span></td>
+        <td class="left" style="font-size:11px;line-height:1.5">サトノレーヴ<br>ナムラクレア<br>ママコチャ 他6頭</td>
+        <td>55.1%</td>
+        <td><span class="num-muted">47.9%</span></td>
+        <td><span class="num-muted">47.9%</span></td>
+        <td>57.0%</td>
+        <td><span class="badge badge-orange">晩成型</span></td>
+      </tr>
+      <tr>
+        <td class="left"><b>2022年</b><br><span style="font-size:10px;color:#666">今年4歳</span></td>
+        <td class="left" style="font-size:11px;line-height:1.5">パンジャタワー<br>レイピア</td>
+        <td>55.3%</td>
+        <td><span class="num-muted">—</span></td>
+        <td><span class="num-muted">—</span></td>
+        <td>57.3%</td>
+        <td><span class="badge badge-gold">未知数</span></td>
+      </tr>
+      <tr>
+        <td class="left"><b>2020年</b><br><span style="font-size:10px;color:#666">今年6歳</span></td>
+        <td class="left" style="font-size:11px;line-height:1.5">ルガル<br>ビッグシーザー 他2頭</td>
+        <td>55.2%</td>
+        <td><span class="num-red">44.8%</span></td>
+        <td><span class="num-red">42.2%</span></td>
+        <td>56.7%</td>
+        <td><span class="badge badge-red">6歳急落</span></td>
+      </tr>
+      <tr>
+        <td class="left"><b>2018年</b><br><span style="font-size:10px;color:#666">今年8歳</span></td>
+        <td class="left" style="font-size:11px">ヨシノイースター</td>
+        <td>56.3%</td>
+        <td><span class="num-muted">47.9%</span></td>
+        <td><span class="num-muted">45.3%</span></td>
+        <td><span class="num-muted">51.8%</span></td>
+        <td><span class="badge badge-gray">平均以下</span></td>
+      </tr>
+      <tr>
+        <td class="left"><b>2017年</b><br><span style="font-size:10px;color:#666">今年9歳</span></td>
+        <td class="left" style="font-size:11px">ウインカーネリアン</td>
+        <td><span class="num-muted">—</span></td>
+        <td><span class="num-muted">43.7%</span></td>
+        <td><span class="num-muted">45.5%</span></td>
+        <td>58.4%</td>
+        <td><span class="badge badge-gray">9歳・参考</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- フッター -->
+<div class="footer">
+  <div>分析条件：JRAデータ 2010〜2026 ／ 古馬混合レース ／ 芝1400m以下オープン以上<br>
+  勝率 = 同一レース内の全出走馬に対して上の着順に来た割合（50%=平均）</div>
+  <div class="tags">
+    <span class="tag">#高松宮記念</span>
+    <span class="tag">#競馬データ分析</span>
+    <span class="tag">#HIVE</span>
+  </div>
+  <div style="margin-top:12px">🐝 HIVE ｜ BT平均回収率 213.2%（8年・23,839R）</div>
+</div>
+
+<script>
+const COLORS = {
+  '2017': '#9ca3af',
+  '2018': '#a78bfa',
+  '2019': '#f97316',
+  '2020': '#3b82f6',
+  '2021': '#10b981',
+  '2022': '#f59e0b',
+};
+const GENS = ['2017','2018','2019','2020','2021','2022'];
+
+// 凡例
+const leg1 = document.getElementById('legend1');
+GENS.forEach(g => {
+  const d = document.createElement('div');
+  d.className = 'legend-item';
+  d.innerHTML = `<div class="legend-dot" style="background:${COLORS[g]}"></div>${g}年生（今${2026-g}歳）`;
+  leg1.appendChild(d);
+});
+
+const gridColor = 'rgba(0,0,0,0.06)';
+const tickColor = '#666';
+
+// baseline plugin
+const baseline = {
+  id: 'bl',
+  beforeDraw(chart, args, opts) {
+    const {ctx, chartArea, scales} = chart;
+    if (!chartArea) return;
+    const isY = opts.axis === 'y';
+    const px = isY ? scales.y.getPixelForValue(50) : scales.x.getPixelForValue(50);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5,4]);
+    ctx.beginPath();
+    if (isY) { ctx.moveTo(chartArea.left, px); ctx.lineTo(chartArea.right, px); }
+    else     { ctx.moveTo(px, chartArea.top); ctx.lineTo(px, chartArea.bottom); }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#999';
+    ctx.font = '10px sans-serif';
+    if (isY) ctx.fillText('50%', chartArea.left + 4, px - 4);
+    else     ctx.fillText('50%', px + 3, chartArea.top + 12);
+    ctx.restore();
+  }
+};
+
+// Chart 1: 折れ線
+const c1data = {
+  '2017': [null, 43.7, 45.5],
+  '2018': [56.3, 47.9, 45.3],
+  '2019': [55.1, 47.9, 47.9],
+  '2020': [55.2, 44.8, 42.2],
+  '2021': [57.1, 52.5, null],
+  '2022': [55.3, null, null],
+};
+
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: {
+    labels: ['4歳時', '5歳時', '6歳時'],
+    datasets: GENS.map(g => ({
+      label: `${g}年(${2026-g}歳)`,
+      data: c1data[g],
+      borderColor: COLORS[g],
+      backgroundColor: COLORS[g] + '18',
+      borderWidth: g === '2021' ? 2.5 : 1.5,
+      pointRadius: g === '2021' ? 6 : 4,
+      pointBackgroundColor: COLORS[g],
+      tension: 0.3,
+      spanGaps: false,
+    }))
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%` } },
+      bl: { axis: 'y' }
+    },
+    scales: {
+      x: { ticks: { color: tickColor, font: { size: 12 } }, grid: { color: gridColor } },
+      y: { min: 38, max: 62, ticks: { callback: v => v + '%', color: tickColor, font: { size: 11 } }, grid: { color: gridColor } }
+    }
+  },
+  plugins: [baseline]
+});
+
+// Chart 2: 横棒
+const c2 = [
+  {g:'2021', v:60.0, n:88},
+  {g:'2017', v:58.4, n:117},
+  {g:'2022', v:57.3, n:78},
+  {g:'2019', v:57.0, n:116},
+  {g:'2020', v:56.7, n:116},
+  {g:'2018', v:51.8, n:101},
+];
+
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: {
+    labels: c2.map(d => `${d.g}年(${2026-d.g}歳) n=${d.n}`),
+    datasets: [{
+      data: c2.map(d => d.v),
+      backgroundColor: c2.map(d => COLORS[d.g] + 'cc'),
+      borderColor: c2.map(d => COLORS[d.g]),
+      borderWidth: 1.5,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(1)}%` } },
+      bl: { axis: 'x' }
+    },
+    scales: {
+      x: { min: 48, max: 63, ticks: { callback: v => v + '%', color: tickColor, font: { size: 11 } }, grid: { color: gridColor } },
+      y: { ticks: { color: '#333', font: { size: 11 } }, grid: { display: false } }
+    }
+  },
+  plugins: [baseline]
+});
+
+// Chart 3: 散布図
+const c3 = [
+  {g:'2017', pre:58.4, taka:60.0, n:3},
+  {g:'2018', pre:51.8, taka:37.8, n:3},
+  {g:'2019', pre:57.0, taka:46.2, n:5},
+  {g:'2020', pre:56.7, taka:26.2, n:5},
+  {g:'2021', pre:60.0, taka:9.4,  n:2},
+];
+
+new Chart(document.getElementById('chart3'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      ...c3.map(d => ({
+        label: `${d.g}年(${2026-d.g}歳) n=${d.n}`,
+        data: [{x: d.pre, y: d.taka}],
+        backgroundColor: COLORS[d.g] + 'cc',
+        borderColor: COLORS[d.g],
+        borderWidth: 1.5,
+        pointRadius: Math.max(7, d.n * 2.5),
+        pointHoverRadius: Math.max(9, d.n * 2.5 + 2),
+      })),
+      {
+        label: '2022年(4歳) 今年が初出走',
+        data: [{x: 57.3, y: 50}],
+        backgroundColor: COLORS['2022'] + '44',
+        borderColor: COLORS['2022'],
+        borderWidth: 2,
+        pointRadius: 10,
+        pointStyle: 'triangle',
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { color: '#444', font: { size: 11 }, boxWidth: 10, padding: 8 } },
+      tooltip: { callbacks: {
+        label: ctx => {
+          if (ctx.dataset.label.includes('初出走')) return ` 2022年: 4歳春${ctx.parsed.x}% → 高松宮は今年が初`;
+          return ` ${ctx.dataset.label}: 4歳春${ctx.parsed.x}% → 高松宮${ctx.parsed.y}%`;
+        }
+      }},
+      bl: { axis: 'x' }
+    },
+    scales: {
+      x: { min: 48, max: 64,
+        title: { display: true, text: '4歳春スプリント勝率%（高松宮除く）', color: '#888', font: { size: 11 } },
+        ticks: { callback: v => v + '%', color: tickColor, font: { size: 11 } }, grid: { color: gridColor } },
+      y: { min: 0, max: 70,
+        title: { display: true, text: '高松宮記念（4歳時）勝率%', color: '#888', font: { size: 11 } },
+        ticks: { callback: v => v + '%', color: tickColor, font: { size: 11 } }, grid: { color: gridColor } }
+    }
+  },
+  plugins: [baseline]
+});
+</script>
+</body>
+</html>
