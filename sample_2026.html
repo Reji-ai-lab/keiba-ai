@@ -1,0 +1,4360 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head><meta charset="utf-8"><title>HIVE 2026年 新ロジック検証</title>
+    <style>
+    body{font-family:sans-serif;background:#f4f6f8;padding:20px;max-width:1000px;margin:0 auto;color:#1b2d45}
+    h1{color:#00866e;border-bottom:2px solid #00b894;padding-bottom:10px}
+    .summary{background:#fff;border-radius:8px;padding:16px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px}
+    .summary-item{text-align:center}.summary-item .val{font-size:22px;font-weight:700;color:#00866e}
+    .summary-item .lbl{font-size:11px;color:#8899aa}
+    .race-card{background:#fff;border-radius:8px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden}
+    .race-header{background:#0d1b2a;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .race-date{color:#b0bec5;font-size:12px}
+    .race-venue{font-weight:700;color:#00b894}
+    .race-name{font-weight:600}
+    .race-cond{color:#b0bec5;font-size:12px}
+    .pat-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff;margin-left:auto}
+    .race-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .horses-section,.bets-section{padding:12px 16px}
+    .bets-section{border-left:1px solid #dfe6ec}
+    .section-title{font-size:11px;font-weight:700;color:#8899aa;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{background:#f4f6f8;padding:4px 8px;text-align:left;font-size:11px;color:#5c7a99}
+    td{padding:4px 8px;border-top:1px solid #f4f6f8}
+    .actual-result{margin-top:8px;font-size:12px;color:#5c7a99;border-top:1px solid #f4f6f8;padding-top:6px}
+    .bet-summary{margin-top:8px;font-size:13px;font-weight:700;border-top:1px solid #f4f6f8;padding-top:6px}
+    </style></head>
+<body>
+<h1>🐝 HIVE 2026年 新ロジック検証サンプル（全30R表示）</h1>
+<div class="summary">
+  <div style="font-weight:700;font-size:15px">2026年全体成績（新ロジック）</div>
+  <div class="summary-grid">
+    <div class="summary-item"><div class="val">230.2%</div><div class="lbl">回収率</div></div>
+    <div class="summary-item"><div class="val">+¥5,847,870</div><div class="lbl">収支</div></div>
+    <div class="summary-item"><div class="val">¥4,492,300</div><div class="lbl">総投資</div></div>
+    <div class="summary-item"><div class="val">¥10,340,170</div><div class="lbl">総回収</div></div>
+  </div>
+</div>
+
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 1R</span>
+        <span class="race-name">中山1R</span>
+        <span class="race-cond">ダート1200m / 16頭</span>
+        <span class="pat-badge" style="background:#6a4c93">◎○▲3強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">14</td>
+              <td>フュルスティン</td>
+              <td style="color:#1d4e89">0.608</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">16</td>
+              <td>アクロスメモリア</td>
+              <td style="color:#1d4e89">0.381</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">04</td>
+              <td>マメーアップル</td>
+              <td style="color:#1d4e89">0.209</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">05</td>
+              <td>メインテーマ</td>
+              <td style="color:#1d4e89">-0.510</td>
+              <td style="color:#666;font-weight:600">9着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">09</td>
+              <td>タマモシルエット</td>
+              <td style="color:#1d4e89">-0.554</td>
+              <td style="color:#666;font-weight:600">12着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:14番　2着:15番　3着:16番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>14-16</td>
+              <td>¥2,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>14-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→16</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>16→14</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-16-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-16-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-04-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>16-04-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→16→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→16→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→04→16</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→04→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>16→14→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>16→14→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>16→04→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>16→04→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,300 → 回収¥0（¥-9,300）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 2R</span>
+        <span class="race-name">中山2R</span>
+        <span class="race-cond">ダート1800m / 13頭</span>
+        <span class="pat-badge" style="background:#2d6a4f">◎1強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">04</td>
+              <td>フィンガー</td>
+              <td style="color:#1d4e89">1.374</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">08</td>
+              <td>ニシノモリミチ</td>
+              <td style="color:#1d4e89">0.403</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">07</td>
+              <td>ゴーフォアブローク</td>
+              <td style="color:#1d4e89">-0.401</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">06</td>
+              <td>タイガーゲイト</td>
+              <td style="color:#1d4e89">-0.452</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">05</td>
+              <td>ブルージェネシス</td>
+              <td style="color:#1d4e89">-0.555</td>
+              <td style="color:#666;font-weight:600">12着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:04番　2着:08番　3着:07番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-08</td>
+              <td>¥1,300</td>
+              <td style="color:#2d6a4f">¥5,460</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬単</td>
+              <td>04→08</td>
+              <td>¥3,600</td>
+              <td style="color:#2d6a4f">¥19,080</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→04</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-08-07</td>
+              <td>¥700</td>
+              <td style="color:#2d6a4f">¥3,150</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-08-06</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-07-06</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→08→07</td>
+              <td>¥100</td>
+              <td style="color:#2d6a4f">¥1,300</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→08→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→06→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→06→07</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥8,200 → 回収¥28,990（+¥20,790）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 3R</span>
+        <span class="race-name">中山3R</span>
+        <span class="race-cond">ダート1200m / 15頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">05</td>
+              <td>ディルガーム</td>
+              <td style="color:#1d4e89">0.883</td>
+              <td style="color:#2d6a4f;font-weight:600">0着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">14</td>
+              <td>エアサロメ</td>
+              <td style="color:#1d4e89">0.424</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">07</td>
+              <td>デザートイーグル</td>
+              <td style="color:#1d4e89">0.284</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">15</td>
+              <td>スナップジジ</td>
+              <td style="color:#1d4e89">0.199</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">13</td>
+              <td>ベセル</td>
+              <td style="color:#1d4e89">0.125</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:14番　2着:13番　3着:16番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>05-14</td>
+              <td>¥1,300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>05→14</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→05</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-14-07</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-14-15</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-07-15</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→14→07</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→14→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→07→14</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→07→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→15→14</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→15→07</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥8,200 → 回収¥0（¥-8,200）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 4R</span>
+        <span class="race-name">中山4R</span>
+        <span class="race-cond">ダート1800m / 12頭</span>
+        <span class="pat-badge" style="background:#6a4c93">◎○▲3強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">04</td>
+              <td>コイオステソーロ</td>
+              <td style="color:#1d4e89">0.664</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">08</td>
+              <td>アラビアンドリーム</td>
+              <td style="color:#1d4e89">0.573</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">07</td>
+              <td>サトノリシャール</td>
+              <td style="color:#1d4e89">0.558</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">02</td>
+              <td>パラダイスフェイス</td>
+              <td style="color:#1d4e89">-0.372</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">11</td>
+              <td>マオノムサシ</td>
+              <td style="color:#1d4e89">-0.415</td>
+              <td style="color:#666;font-weight:600">10着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:07番　2着:02番　3着:05番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-08</td>
+              <td>¥1,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-07</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>04→08</td>
+              <td>¥900</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→04</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-08-07</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-08-02</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-07-02</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-07-02</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→08→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→08→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→08</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→04→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→04→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→07→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→07→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,900 → 回収¥0（¥-7,900）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 6R</span>
+        <span class="race-name">中山6R</span>
+        <span class="race-cond">芝2000m / 17頭</span>
+        <span class="pat-badge" style="background:#4a4a4a">上位混戦</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">08</td>
+              <td>トップオブザライン</td>
+              <td style="color:#1d4e89">0.634</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">09</td>
+              <td>ドウカキミニトドケ</td>
+              <td style="color:#1d4e89">0.250</td>
+              <td style="color:#666;font-weight:600">14着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">11</td>
+              <td>ロジマギー</td>
+              <td style="color:#1d4e89">0.217</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">17</td>
+              <td>ダイナソーコー</td>
+              <td style="color:#1d4e89">0.201</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">10</td>
+              <td>トライアンドエラー</td>
+              <td style="color:#1d4e89">0.175</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:08番　2着:10番　3着:12番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-09</td>
+              <td>¥2,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-11</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→09</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>09→08</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-09-11</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-09-17</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-11-17</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>09-11-17</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→09→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→09→17</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→11→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→11→17</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→17→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→17→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→08→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→08→17</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→11→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→11→17</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→17→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→17→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,400 → 回収¥0（¥-9,400）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 7R</span>
+        <span class="race-name">中山7R</span>
+        <span class="race-cond">ダート1800m / 16頭</span>
+        <span class="pat-badge" style="background:#1d4e89">◎○2強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">07</td>
+              <td>ホウオウサムレット</td>
+              <td style="color:#1d4e89">0.699</td>
+              <td style="color:#666;font-weight:600">14着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">13</td>
+              <td>バタール</td>
+              <td style="color:#1d4e89">0.559</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">08</td>
+              <td>ブレードサクセス</td>
+              <td style="color:#1d4e89">0.012</td>
+              <td style="color:#666;font-weight:600">9着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">03</td>
+              <td>タキノボリ</td>
+              <td style="color:#1d4e89">-0.318</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">10</td>
+              <td>ハルノアラシ</td>
+              <td style="color:#1d4e89">-0.596</td>
+              <td style="color:#666;font-weight:600">13着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:13番　2着:16番　3着:01番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>07-13</td>
+              <td>¥2,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>07→13</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>13→07</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-13-08</td>
+              <td>¥1,100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-13-03</td>
+              <td>¥1,100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-13-10</td>
+              <td>¥1,100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→13→08</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→07→08</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→13→03</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→07→03</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→13→10</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→07→10</td>
+              <td>¥300</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,700 → 回収¥0（¥-9,700）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 8R</span>
+        <span class="race-name">中山8R</span>
+        <span class="race-cond">ダート1200m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">13</td>
+              <td>アイドル</td>
+              <td style="color:#1d4e89">0.328</td>
+              <td style="color:#666;font-weight:600">10着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">14</td>
+              <td>パレスドフィーヌ</td>
+              <td style="color:#1d4e89">-0.147</td>
+              <td style="color:#666;font-weight:600">16着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">03</td>
+              <td>フラッシュポイント</td>
+              <td style="color:#1d4e89">-0.334</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">15</td>
+              <td>デルマエアロール</td>
+              <td style="color:#1d4e89">-0.538</td>
+              <td style="color:#666;font-weight:600">15着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">05</td>
+              <td>ヒットミー</td>
+              <td style="color:#1d4e89">-0.897</td>
+              <td style="color:#666;font-weight:600">14着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:04番　2着:11番　3着:12番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>13-14</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>13→14</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→13</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>13-14-03</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>13-14-15</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>13-03-15</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→14→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→14→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→03→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→03→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→15→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>13→15→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,800 → 回収¥0（¥-9,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 9R</span>
+        <span class="race-name">招福ステークス</span>
+        <span class="race-cond">ダート1800m / 11頭</span>
+        <span class="pat-badge" style="background:#4a4a4a">上位混戦</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">10</td>
+              <td>バギーウィップ</td>
+              <td style="color:#1d4e89">0.133</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">02</td>
+              <td>デコラシオン</td>
+              <td style="color:#1d4e89">-0.183</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">03</td>
+              <td>アスクデビューモア</td>
+              <td style="color:#1d4e89">-0.202</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">09</td>
+              <td>アンジュフィールド</td>
+              <td style="color:#1d4e89">-0.349</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">07</td>
+              <td>タンゴバイラリン</td>
+              <td style="color:#1d4e89">-0.383</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:03番　2着:04番　3着:10番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>10-02</td>
+              <td>¥1,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>10-03</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→02</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>02→10</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-02-03</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-02-09</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-03-09</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>02-03-09</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→02→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→02→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→03→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→03→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→09→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→09→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→10→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→10→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→03→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→03→09</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→09→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→09→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,700 → 回収¥0（¥-7,700）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 1R</span>
+        <span class="race-name">京都1R</span>
+        <span class="race-cond">ダート1200m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">14</td>
+              <td>タナスーペルノーバ</td>
+              <td style="color:#1d4e89">0.836</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">05</td>
+              <td>テーオーアンジェラ</td>
+              <td style="color:#1d4e89">0.311</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">08</td>
+              <td>ジーティーリボーン</td>
+              <td style="color:#1d4e89">0.058</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">04</td>
+              <td>マクアケ</td>
+              <td style="color:#1d4e89">-0.006</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">07</td>
+              <td>ビスケットアソート</td>
+              <td style="color:#1d4e89">-0.039</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:09番　2着:07番　3着:16番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>14-05</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→05</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>05→14</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-05-08</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-05-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>14-08-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→05→08</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→05→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→08→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→08→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→04→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>14→04→08</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,800 → 回収¥0（¥-9,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 2R</span>
+        <span class="race-name">京都2R</span>
+        <span class="race-cond">ダート1800m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">04</td>
+              <td>リアライズグリント</td>
+              <td style="color:#1d4e89">0.854</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">11</td>
+              <td>ナウオアネヴァー</td>
+              <td style="color:#1d4e89">0.340</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">02</td>
+              <td>タガノエルー</td>
+              <td style="color:#1d4e89">0.103</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">07</td>
+              <td>ディープシャロー</td>
+              <td style="color:#1d4e89">-0.231</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">15</td>
+              <td>ロードファイター</td>
+              <td style="color:#1d4e89">-0.234</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:02番　2着:04番　3着:14番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-11</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>04→11</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-11-02</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-11-07</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-02-07</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→11→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→11→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→02→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→02→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→02</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,800 → 回収¥0（¥-9,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 3R</span>
+        <span class="race-name">京都3R</span>
+        <span class="race-cond">ダート1400m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">04</td>
+              <td>アニマレイ</td>
+              <td style="color:#1d4e89">1.178</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">07</td>
+              <td>セレブトーチ</td>
+              <td style="color:#1d4e89">0.629</td>
+              <td style="color:#666;font-weight:600">16着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">13</td>
+              <td>モズプリフォール</td>
+              <td style="color:#1d4e89">0.372</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">03</td>
+              <td>ムスクレスト</td>
+              <td style="color:#1d4e89">0.336</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">01</td>
+              <td>メイショウバルク</td>
+              <td style="color:#1d4e89">0.255</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:11番　2着:02番　3着:01番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-07</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>04→07</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>07→04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-07-13</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-07-03</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-13-03</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→13</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→13→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→13→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→03→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→03→13</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,800 → 回収¥0（¥-9,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 4R</span>
+        <span class="race-name">京都4R</span>
+        <span class="race-cond">ダート1800m / 12頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">06</td>
+              <td>ウインモンクール</td>
+              <td style="color:#1d4e89">0.762</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">07</td>
+              <td>ウォーターハクビ</td>
+              <td style="color:#1d4e89">0.352</td>
+              <td style="color:#2d6a4f;font-weight:600">0着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">08</td>
+              <td>エナジーイッセイ</td>
+              <td style="color:#1d4e89">0.345</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">12</td>
+              <td>ショーライトイヤー</td>
+              <td style="color:#1d4e89">-0.139</td>
+              <td style="color:#666;font-weight:600">10着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">05</td>
+              <td>ハイロード</td>
+              <td style="color:#1d4e89">-0.201</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:04番　2着:01番　3着:06番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>06-07</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>06→07</td>
+              <td>¥3,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>07→06</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-07-08</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-07-12</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-08-12</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→07→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→07→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→08→07</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→08→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→12→07</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→12→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,300 → 回収¥0（¥-7,300）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 5R</span>
+        <span class="race-name">京都5R</span>
+        <span class="race-cond">芝1800m / 18頭</span>
+        <span class="pat-badge" style="background:#7d4e00">上位混戦(差あり)</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">02</td>
+              <td>フォーチュンライド</td>
+              <td style="color:#1d4e89">1.475</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">15</td>
+              <td>オーブフレッシュ</td>
+              <td style="color:#1d4e89">1.136</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">05</td>
+              <td>ベラジオヴァレル</td>
+              <td style="color:#1d4e89">0.849</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">08</td>
+              <td>タイキルッジェーロ</td>
+              <td style="color:#1d4e89">0.635</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">14</td>
+              <td>エイカイコバチ</td>
+              <td style="color:#1d4e89">0.570</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:08番　2着:02番　3着:15番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>02-15</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>02-05</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>02→15</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>15→02</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>02-15-05</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連複</td>
+              <td>02-15-08</td>
+              <td>¥1,200</td>
+              <td style="color:#2d6a4f">¥1,479,000</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>02-05-08</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>15-05-08</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→15→05</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→15→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→05→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→05→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→08→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>02→08→05</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→02→05</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→02→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→05→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→05→08</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→08→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>15→08→05</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥9,200 → 回収¥1,479,000（+¥1,469,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 7R</span>
+        <span class="race-name">京都7R</span>
+        <span class="race-cond">ダート1800m / 10頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">07</td>
+              <td>キャットテイル</td>
+              <td style="color:#1d4e89">0.591</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">06</td>
+              <td>オーケーエンジェル</td>
+              <td style="color:#1d4e89">-0.002</td>
+              <td style="color:#666;font-weight:600">10着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">03</td>
+              <td>サンコンクエスト</td>
+              <td style="color:#1d4e89">-0.057</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">01</td>
+              <td>ヴァリオーサ</td>
+              <td style="color:#1d4e89">-0.110</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">10</td>
+              <td>ハギノコラソン</td>
+              <td style="color:#1d4e89">-0.490</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:02番　2着:10番　3着:05番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>07-06</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>07→06</td>
+              <td>¥3,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>06→07</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-06-03</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-06-01</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-03-01</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→06→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→06→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→03→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→03→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→01→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→01→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,300 → 回収¥0（¥-7,300）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 8R</span>
+        <span class="race-name">京都8R</span>
+        <span class="race-cond">ダート1200m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">01</td>
+              <td>ロードヴァルカン</td>
+              <td style="color:#1d4e89">0.739</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">11</td>
+              <td>イマージョン</td>
+              <td style="color:#1d4e89">0.260</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">15</td>
+              <td>ペンテリコン</td>
+              <td style="color:#1d4e89">0.143</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">05</td>
+              <td>ダノンモンテローザ</td>
+              <td style="color:#1d4e89">0.000</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">13</td>
+              <td>ヴェントインコーダ</td>
+              <td style="color:#1d4e89">-0.127</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:11番　2着:01番　3着:05番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬連</td>
+              <td>01-11</td>
+              <td>¥1,500</td>
+              <td style="color:#2d6a4f">¥7,500</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>01→11</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→01</td>
+              <td>¥700</td>
+              <td style="color:#2d6a4f">¥7,630</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-11-15</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-11-05</td>
+              <td>¥800</td>
+              <td style="color:#2d6a4f">¥14,000</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-15-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→11→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→11→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→15→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→15→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→05→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→05→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥9,800 → 回収¥29,130（+¥19,330）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 9R</span>
+        <span class="race-name">天ケ瀬特別</span>
+        <span class="race-cond">ダート1800m / 13頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">09</td>
+              <td>グランドプラージュ</td>
+              <td style="color:#1d4e89">1.137</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">13</td>
+              <td>ドゥラエテルノ</td>
+              <td style="color:#1d4e89">0.638</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">10</td>
+              <td>スーパージョック</td>
+              <td style="color:#1d4e89">0.291</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">04</td>
+              <td>サトノシュトラーセ</td>
+              <td style="color:#1d4e89">0.255</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">11</td>
+              <td>マナエトレ</td>
+              <td style="color:#1d4e89">-0.102</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:09番　2着:11番　3着:13番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>09-13</td>
+              <td>¥1,300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>09→13</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>13→09</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>09-13-10</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>09-13-04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>09-10-04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→13→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→13→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→10→13</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→10→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→04→13</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>09→04→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥8,200 → 回収¥0（¥-8,200）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 11R</span>
+        <span class="race-name">スポーツニッポン賞京都金杯</span>
+        <span class="race-cond">芝1600m / 18頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">06</td>
+              <td>ヤンキーバローズ</td>
+              <td style="color:#1d4e89">0.854</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">14</td>
+              <td>シンフォーエバー</td>
+              <td style="color:#1d4e89">0.413</td>
+              <td style="color:#666;font-weight:600">16着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">11</td>
+              <td>ファーヴェント</td>
+              <td style="color:#1d4e89">0.257</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">15</td>
+              <td>ブエナオンダ</td>
+              <td style="color:#1d4e89">0.244</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">01</td>
+              <td>ランスオブカオス</td>
+              <td style="color:#1d4e89">-0.034</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:15番　2着:11番　3着:10番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>06-14</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>06→14</td>
+              <td>¥3,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→06</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-14-11</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-14-15</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>06-11-15</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→14→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→14→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→11→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→11→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→15→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→15→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,900 → 回収¥0（¥-9,900）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 12R</span>
+        <span class="race-name">京都12R</span>
+        <span class="race-cond">芝1400m / 12頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">07</td>
+              <td>シホノペルフェット</td>
+              <td style="color:#1d4e89">0.530</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">12</td>
+              <td>ブルクトーア</td>
+              <td style="color:#1d4e89">0.084</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">10</td>
+              <td>ララマセラシオン</td>
+              <td style="color:#1d4e89">-0.224</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">02</td>
+              <td>ネーブルオレンジ</td>
+              <td style="color:#1d4e89">-0.310</td>
+              <td style="color:#666;font-weight:600">9着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">08</td>
+              <td>アドマイヤジェイ</td>
+              <td style="color:#1d4e89">-0.496</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:10番　2着:12番　3着:06番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>07-12</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>07→12</td>
+              <td>¥2,800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>12→07</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-12-10</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-12-02</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>07-10-02</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→12→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→12→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→10→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→10→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→02→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>07→02→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,500 → 回収¥0（¥-7,500）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 1R</span>
+        <span class="race-name">中山1R</span>
+        <span class="race-cond">ダート1200m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">05</td>
+              <td>ヴァイオスペース</td>
+              <td style="color:#1d4e89">0.539</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">06</td>
+              <td>サトノエスケープ</td>
+              <td style="color:#1d4e89">0.008</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">04</td>
+              <td>デアトゥノウ</td>
+              <td style="color:#1d4e89">-0.054</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">16</td>
+              <td>ベアゴーフォー</td>
+              <td style="color:#1d4e89">-0.285</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">07</td>
+              <td>ドリームガッサン</td>
+              <td style="color:#1d4e89">-0.304</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:05番　2着:06番　3着:11番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬連</td>
+              <td>05-06</td>
+              <td>¥1,500</td>
+              <td style="color:#2d6a4f">¥15,000</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬単</td>
+              <td>05→06</td>
+              <td>¥4,000</td>
+              <td style="color:#2d6a4f">¥86,400</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>06→05</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-06-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-06-16</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>05-04-16</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→06→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→06→16</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→04→06</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→04→16</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→16→06</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>05→16→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥9,800 → 回収¥101,400（+¥91,600）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 4R</span>
+        <span class="race-name">中山4R</span>
+        <span class="race-cond">ダート2400m / 13頭</span>
+        <span class="pat-badge" style="background:#2d6a4f">◎1強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">11</td>
+              <td>キャストロププ</td>
+              <td style="color:#1d4e89">0.185</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">13</td>
+              <td>ステイアンビシャス</td>
+              <td style="color:#1d4e89">-0.421</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">02</td>
+              <td>アルデツヨシ</td>
+              <td style="color:#1d4e89">-0.514</td>
+              <td style="color:#666;font-weight:600">13着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">01</td>
+              <td>スマートクオーレ</td>
+              <td style="color:#1d4e89">-0.723</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">03</td>
+              <td>ブレイクザアイス</td>
+              <td style="color:#1d4e89">-0.753</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:11番　2着:01番　3着:13番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>11-13</td>
+              <td>¥1,300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→13</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>13→11</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-13-02</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-13-01</td>
+              <td>¥700</td>
+              <td style="color:#2d6a4f">¥10,290</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-02-01</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→13→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→13→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→02→13</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→02→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→01→13</td>
+              <td>¥100</td>
+              <td style="color:#2d6a4f">¥4,630</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→01→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥8,200 → 回収¥14,920（+¥6,720）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 6R</span>
+        <span class="race-name">中山6R</span>
+        <span class="race-cond">芝2000m / 18頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">04</td>
+              <td>プレイザリード</td>
+              <td style="color:#1d4e89">1.111</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">10</td>
+              <td>ウィロークリーク</td>
+              <td style="color:#1d4e89">0.623</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">12</td>
+              <td>イモータリス</td>
+              <td style="color:#1d4e89">0.446</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">07</td>
+              <td>サトノワーグナー</td>
+              <td style="color:#1d4e89">0.090</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">14</td>
+              <td>マイネルゼーロス</td>
+              <td style="color:#1d4e89">-0.088</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:12番　2着:10番　3着:07番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>04-10</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>04→10</td>
+              <td>¥3,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-10-12</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-10-07</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>04-12-07</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→10→12</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→10→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→12→10</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→12→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→10</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>04→07→12</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,900 → 回収¥0（¥-9,900）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 7R</span>
+        <span class="race-name">中山7R</span>
+        <span class="race-cond">芝2000m / 10頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">08</td>
+              <td>フロレセール</td>
+              <td style="color:#1d4e89">0.875</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">01</td>
+              <td>コスモエルヴァル</td>
+              <td style="color:#1d4e89">0.430</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">02</td>
+              <td>ステラスペース</td>
+              <td style="color:#1d4e89">0.047</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">04</td>
+              <td>ヒシアムルーズ</td>
+              <td style="color:#1d4e89">-0.047</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">03</td>
+              <td>アンソニー</td>
+              <td style="color:#1d4e89">-0.156</td>
+              <td style="color:#666;font-weight:600">5着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:02番　2着:08番　3着:07番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-01</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→01</td>
+              <td>¥2,800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>01→08</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-01-02</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-01-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-02-04</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→01→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→01→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→02→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→02→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→04→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→04→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,500 → 回収¥0（¥-7,500）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 10R</span>
+        <span class="race-name">初日の出賞</span>
+        <span class="race-cond">芝2000m / 11頭</span>
+        <span class="pat-badge" style="background:#6a4c93">◎○▲3強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">10</td>
+              <td>ドゥカート</td>
+              <td style="color:#1d4e89">0.525</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">11</td>
+              <td>タイセイリコルド</td>
+              <td style="color:#1d4e89">0.357</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">08</td>
+              <td>オメガインペリアル</td>
+              <td style="color:#1d4e89">0.311</td>
+              <td style="color:#2d6a4f;font-weight:600">0着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">01</td>
+              <td>ダンツファイター</td>
+              <td style="color:#1d4e89">0.032</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">07</td>
+              <td>レイヤードレッド</td>
+              <td style="color:#1d4e89">-0.123</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:01番　2着:11番　3着:03番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>10-11</td>
+              <td>¥1,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>10-08</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→11</td>
+              <td>¥900</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→10</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-11-08</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-11-01</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-08-01</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-08-01</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→08</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→01</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→08→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→08→01</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→10→08</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→10→01</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→08→10</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→08→01</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,900 → 回収¥0（¥-7,900）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">中山 11R</span>
+        <span class="race-name">サンライズステークス</span>
+        <span class="race-cond">芝1200m / 14頭</span>
+        <span class="pat-badge" style="background:#6a4c93">◎○▲3強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">11</td>
+              <td>イサチルシーサイド</td>
+              <td style="color:#1d4e89">-0.112</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">10</td>
+              <td>レオテミス</td>
+              <td style="color:#1d4e89">-0.122</td>
+              <td style="color:#666;font-weight:600">13着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">14</td>
+              <td>コスモアディラート</td>
+              <td style="color:#1d4e89">-0.214</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">07</td>
+              <td>スコーピオン</td>
+              <td style="color:#1d4e89">-0.452</td>
+              <td style="color:#666;font-weight:600">9着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">03</td>
+              <td>マックアルイーン</td>
+              <td style="color:#1d4e89">-0.459</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:13番　2着:11番　3着:12番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>11-10</td>
+              <td>¥1,800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>11-14</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→10</td>
+              <td>¥1,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→11</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-10-14</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-10-07</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-14-07</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-14-07</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→10→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→10→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→14→10</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→14→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→14</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→14→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→14→07</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥8,300 → 回収¥0（¥-8,300）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 2R</span>
+        <span class="race-name">京都2R</span>
+        <span class="race-cond">ダート1900m / 16頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">08</td>
+              <td>エドウィンナルコ</td>
+              <td style="color:#1d4e89">0.950</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">03</td>
+              <td>フィサブロス</td>
+              <td style="color:#1d4e89">0.536</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">15</td>
+              <td>カレンショー</td>
+              <td style="color:#1d4e89">0.230</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">05</td>
+              <td>ノービレ</td>
+              <td style="color:#1d4e89">0.017</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">11</td>
+              <td>ガウラディスコ</td>
+              <td style="color:#1d4e89">-0.280</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:08番　2着:05番　3着:09番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-03</td>
+              <td>¥1,500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→03</td>
+              <td>¥4,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>03→08</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-03-15</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-03-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-15-05</td>
+              <td>¥800</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→03→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→03→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→15→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→15→05</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→05→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→05→15</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥9,800 → 回収¥0（¥-9,800）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 3R</span>
+        <span class="race-name">京都3R</span>
+        <span class="race-cond">ダート1200m / 14頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">08</td>
+              <td>ウェルカムソング</td>
+              <td style="color:#1d4e89">0.923</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">01</td>
+              <td>マナボニート</td>
+              <td style="color:#1d4e89">0.476</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">11</td>
+              <td>エンドレスクライ</td>
+              <td style="color:#1d4e89">0.249</td>
+              <td style="color:#666;font-weight:600">13着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">03</td>
+              <td>ローメット</td>
+              <td style="color:#1d4e89">-0.046</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">06</td>
+              <td>タイセイフリーデン</td>
+              <td style="color:#1d4e89">-0.083</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:01番　2着:08番　3着:02番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-01</td>
+              <td>¥1,300</td>
+              <td style="color:#2d6a4f">¥5,980</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→01</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="background:#e8f9f3;font-weight:700">
+              <td style="color:#1d4e89">馬単</td>
+              <td>01→08</td>
+              <td>¥600</td>
+              <td style="color:#2d6a4f">¥6,540</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-01-11</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-01-03</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-11-03</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→01→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→01→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→11→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→11→03</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→03→01</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→03→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#2d6a4f">
+            投資¥8,200 → 回収¥12,520（+¥4,320）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 4R</span>
+        <span class="race-name">京都4R</span>
+        <span class="race-cond">ダート1800m / 11頭</span>
+        <span class="pat-badge" style="background:#2d6a4f">◎1強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">08</td>
+              <td>メルカントゥール</td>
+              <td style="color:#1d4e89">1.247</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">10</td>
+              <td>スカイストライプス</td>
+              <td style="color:#1d4e89">0.645</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">02</td>
+              <td>リヒトミューレ</td>
+              <td style="color:#1d4e89">0.435</td>
+              <td style="color:#666;font-weight:600">6着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">06</td>
+              <td>ヘルメスギャング</td>
+              <td style="color:#1d4e89">0.294</td>
+              <td style="color:#666;font-weight:600">8着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">03</td>
+              <td>ディーリライズ</td>
+              <td style="color:#1d4e89">0.216</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:09番　2着:08番　3着:05番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>08-10</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>08→10</td>
+              <td>¥3,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→08</td>
+              <td>¥500</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-10-02</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-10-06</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>08-02-06</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→10→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→10→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→02→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→02→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→06→10</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>08→06→02</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,300 → 回収¥0（¥-7,300）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 7R</span>
+        <span class="race-name">京都7R</span>
+        <span class="race-cond">ダート1800m / 15頭</span>
+        <span class="pat-badge" style="background:#b5451b">◎やや優位</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">10</td>
+              <td>ハイクオリティ</td>
+              <td style="color:#1d4e89">0.704</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">15</td>
+              <td>ステイクオール</td>
+              <td style="color:#1d4e89">0.231</td>
+              <td style="color:#666;font-weight:600">13着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">12</td>
+              <td>プロスペクト</td>
+              <td style="color:#1d4e89">0.173</td>
+              <td style="color:#2d6a4f;font-weight:600">0着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">11</td>
+              <td>ワイドクリーガー</td>
+              <td style="color:#1d4e89">0.145</td>
+              <td style="color:#666;font-weight:600">11着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">06</td>
+              <td>ジーティーパワー</td>
+              <td style="color:#1d4e89">0.031</td>
+              <td style="color:#666;font-weight:600">12着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:13番　2着:10番　3着:09番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>10-15</td>
+              <td>¥1,300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>10→15</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>15→10</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-15-12</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-15-11</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>10-12-11</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→15→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→15→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→12→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→12→11</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→15</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>10→11→12</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥8,200 → 回収¥0（¥-8,200）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 8R</span>
+        <span class="race-name">京都8R</span>
+        <span class="race-cond">ダート1200m / 15頭</span>
+        <span class="pat-badge" style="background:#2d6a4f">◎1強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">11</td>
+              <td>ミッキーマカパ</td>
+              <td style="color:#1d4e89">0.892</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">14</td>
+              <td>ヴリトラハン</td>
+              <td style="color:#1d4e89">0.020</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">06</td>
+              <td>イリフィ</td>
+              <td style="color:#1d4e89">-0.059</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">04</td>
+              <td>フェデラー</td>
+              <td style="color:#1d4e89">-0.312</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">10</td>
+              <td>ペプチドクレマチス</td>
+              <td style="color:#1d4e89">-0.359</td>
+              <td style="color:#666;font-weight:600">14着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:06番　2着:14番　3着:15番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>11-14</td>
+              <td>¥1,300</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>11→14</td>
+              <td>¥3,600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>14→11</td>
+              <td>¥600</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-14-06</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-14-04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>11-06-04</td>
+              <td>¥700</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→14→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→14→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→06→14</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→06→04</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→04→14</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>11→04→06</td>
+              <td>¥100</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥8,200 → 回収¥0（¥-8,200）
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-header">
+        <span class="race-date"></span>
+        <span class="race-venue">京都 9R</span>
+        <span class="race-name">逢坂山特別</span>
+        <span class="race-cond">芝1800m / 11頭</span>
+        <span class="pat-badge" style="background:#1d4e89">◎○2強</span>
+      </div>
+      <div class="race-body">
+        <div class="horses-section">
+          <div class="section-title">予想</div>
+          <table class="horse-table">
+            <tr><th>印</th><th>馬番</th><th>馬名</th><th>スコア</th><th>結果</th></tr>
+            
+            <tr>
+              <td style="color:#e67e22;font-weight:700">◎</td>
+              <td style="font-weight:600">01</td>
+              <td>コスモアンソロジー</td>
+              <td style="color:#1d4e89">0.497</td>
+              <td style="color:#666;font-weight:600">4着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">○</td>
+              <td style="font-weight:600">06</td>
+              <td>レディーミコノス</td>
+              <td style="color:#1d4e89">0.476</td>
+              <td style="color:#2d6a4f;font-weight:600">3着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">▲</td>
+              <td style="font-weight:600">03</td>
+              <td>チェルノボーグ</td>
+              <td style="color:#1d4e89">-0.048</td>
+              <td style="color:#2d6a4f;font-weight:600">1着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">△</td>
+              <td style="font-weight:600">11</td>
+              <td>レッセパッセ</td>
+              <td style="color:#1d4e89">-0.428</td>
+              <td style="color:#666;font-weight:600">7着</td>
+            </tr>
+            <tr>
+              <td style="color:#e67e22;font-weight:700">×</td>
+              <td style="font-weight:600">04</td>
+              <td>ナイトスラッガー</td>
+              <td style="color:#1d4e89">-0.447</td>
+              <td style="color:#2d6a4f;font-weight:600">2着</td>
+            </tr>
+          </table>
+          <div class="actual-result">実結果: 1着:03番　2着:04番　3着:06番</div>
+        </div>
+        <div class="bets-section">
+          <div class="section-title">買い目</div>
+          <table class="bet-table">
+            <tr><th>券種</th><th>組合せ</th><th>投資</th><th>払戻</th></tr>
+            
+            <tr style="">
+              <td style="color:#1d4e89">馬連</td>
+              <td>01-06</td>
+              <td>¥2,000</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>01→06</td>
+              <td>¥1,200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">馬単</td>
+              <td>06→01</td>
+              <td>¥400</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-06-03</td>
+              <td>¥900</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-06-11</td>
+              <td>¥900</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連複</td>
+              <td>01-06-04</td>
+              <td>¥900</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→06→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→01→03</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→06→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→01→11</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>01→06→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+            <tr style="">
+              <td style="color:#1d4e89">3連単</td>
+              <td>06→01→04</td>
+              <td>¥200</td>
+              <td style="color:#999">-</td>
+            </tr>
+          </table>
+          <div class="bet-summary" style="color:#c0392b">
+            投資¥7,500 → 回収¥0（¥-7,500）
+          </div>
+        </div>
+      </div>
+    </div>
+</body></html>
