@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>オークス 馬体重分析</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f4f6f8;font-family:sans-serif;padding:20px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.card{background:#fff;border:1px solid #dfe6ec;border-radius:14px;padding:24px;width:100%;max-width:480px}
+.tag{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:#00866e;padding:4px 12px;border-radius:20px;letter-spacing:1px;margin-bottom:14px}
+.title{font-size:15px;font-weight:700;color:#0d1b2a;margin-bottom:4px;line-height:1.4}
+.sub{font-size:11px;color:#8899aa;margin-bottom:18px;line-height:1.5}
+.chart-wrap{position:relative;width:100%;height:240px}
+.note{font-size:10px;color:#8899aa;margin-top:12px;text-align:center;line-height:1.6}
+.legend{display:flex;gap:20px;justify-content:center;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:#8899aa}
+.leg-sq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.leg-line{width:18px;height:2px;background:#00866e}
+.leg-dash{width:18px;height:2px;background-image:repeating-linear-gradient(90deg,#8899aa 0,#8899aa 4px,transparent 4px,transparent 8px)}
+.footer{margin-top:16px;padding-top:12px;border-top:1px solid #dfe6ec;font-size:9px;color:#b0bec5;text-align:center;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+
+<!-- Graph 1 -->
+<div class="card">
+  <div class="tag">2 / 7</div>
+  <div class="title">年別出走馬 平均馬体重の推移（2007–2025）</div>
+  <div class="sub">年によって最大20kg以上の差があるため、絶対値ではなく<br>同レース内での相対値で分析する</div>
+  <div class="chart-wrap"><canvas id="c1"></canvas></div>
+  <div class="legend" style="margin-top:10px;margin-bottom:0">
+    <span class="leg"><span class="leg-line"></span>年別平均</span>
+    <span class="leg"><span class="leg-dash"></span>全年平均 454.3kg</span>
+  </div>
+  <p class="note">最大差 20.7kg（2009年 464.1kg ／ 2012年 443.4kg）</p>
+  <div class="footer">オークス 2007–2025 全出走馬データ（除外馬除く）n=338</div>
+</div>
+
+<!-- Graph 2 -->
+<div class="card">
+  <div class="tag">4 / 7</div>
+  <div class="title">相対体重グループ別 3着以内率（2007–2025 全体）</div>
+  <div class="sub">重い／軽いは同レース出走馬の平均体重との比較で分類</div>
+  <div class="chart-wrap"><canvas id="c2"></canvas></div>
+  <p class="note">重い馬は軽い馬の約2倍の確率で馬券に絡んでいる</p>
+  <div class="footer">オークス 2007–2025 全出走馬データ（除外馬除く）n=338</div>
+</div>
+
+<!-- Graph 3 -->
+<div class="card">
+  <div class="tag">5 / 7</div>
+  <div class="title">時代別 相対体重グループ別 3着以内率</div>
+  <div class="sub">2017年以降、傾向が鮮明に</div>
+  <div class="legend">
+    <span class="leg"><span class="leg-sq" style="background:#5c7a99"></span>2007–2016</span>
+    <span class="leg"><span class="leg-sq" style="background:#00866e"></span>2017–2025</span>
+  </div>
+  <div class="chart-wrap"><canvas id="c3"></canvas></div>
+  <p class="note">2017年以降、軽い馬の3着以内率は 16.4% → 4.0% に急落</p>
+  <div class="footer">オークス 2007–2025 全出走馬データ（除外馬除く）n=338</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const G='#00866e', S='#5c7a99', M='#8899aa', T='#0d1b2a', GR='#dfe6ec';
+
+const labelPlugin = {
+  id:'topLabel',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds, di)=>{
+      chart.getDatasetMeta(di).data.forEach((bar, i)=>{
+        const v = ds.data[i];
+        ctx.save();
+        ctx.fillStyle = T;
+        ctx.font = '600 13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v.toFixed(1)+'%', bar.x, bar.y - 9);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+// Graph 1
+new Chart(document.getElementById('c1'), {
+  type: 'line',
+  data: {
+    labels: ['07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'],
+    datasets: [
+      {
+        data: [452.0,451.1,464.1,456.8,447.2,443.4,452.4,453.4,449.8,449.1,457.9,454.6,461.4,449.8,460.4,450.9,457.2,463.0,457.1],
+        borderColor: G, backgroundColor: G+'18',
+        pointBackgroundColor: G, pointRadius: 5, tension: 0.3, fill: true, borderWidth: 2.5
+      },
+      {
+        data: Array(19).fill(454.3),
+        borderColor: M, borderDash: [6,4], pointRadius: 0, borderWidth: 1.5
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => d.raw.toFixed(1)+'kg' } } },
+    scales: {
+      x: { grid: { color: GR }, ticks: { color: M, font: { size: 11 } } },
+      y: { min: 432, max: 472, grid: { color: GR }, ticks: { color: M, font: { size: 11 }, callback: v => v+'kg' } }
+    }
+  }
+});
+
+// Graph 2
+new Chart(document.getElementById('c2'), {
+  type: 'bar',
+  data: {
+    labels: ['軽い', '中間', '重い'],
+    datasets: [{ data: [10.5, 18.5, 21.4], backgroundColor: [S, M, G], borderRadius: 8, borderSkipped: false }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: T, font: { size: 15, weight: '600' } } },
+      y: { min: 0, max: 30, grid: { color: GR }, ticks: { color: M, font: { size: 11 }, callback: v => v+'%' } }
+    },
+    layout: { padding: { top: 28 } }
+  },
+  plugins: [labelPlugin]
+});
+
+// Graph 3
+new Chart(document.getElementById('c3'), {
+  type: 'bar',
+  data: {
+    labels: ['軽い', '中間', '重い'],
+    datasets: [
+      { label: '2007–2016', data: [16.4, 17.6, 16.3], backgroundColor: S, borderRadius: 6, borderSkipped: false },
+      { label: '2017–2025', data: [4.0, 19.6, 25.9],  backgroundColor: G, borderRadius: 6, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: T, font: { size: 14, weight: '600' } } },
+      y: { min: 0, max: 33, grid: { color: GR }, ticks: { color: M, font: { size: 11 }, callback: v => v+'%' } }
+    },
+    layout: { padding: { top: 24 } }
+  },
+  plugins: [labelPlugin]
+});
+</script>
+</body>
+</html>
