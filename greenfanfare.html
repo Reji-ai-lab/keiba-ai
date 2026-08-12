@@ -84,10 +84,8 @@ input[type=number]{-moz-appearance:textfield}
 
 .result-summary{margin-top:12px;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:500;
                 display:flex;justify-content:space-between;align-items:center}
-.result-win{background:var(--hit-bg);color:var(--hit-fg);border:1px solid var(--hit-border)}
 .result-lose{background:var(--gr5);color:var(--gr2);border:1px solid var(--gr4)}
 .result-pl{font-size:14px;font-weight:600}
-#verdict{justify-content:flex-end}
 
 .t{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;
    margin:0 6px 4px 0}
@@ -150,7 +148,6 @@ button:focus-visible{outline:2px solid var(--g2);outline-offset:1px}
       <div class="cell"><div class="cell-label">損益分岐</div><div class="cell-val" id="kBep">—</div></div>
       <div class="cell"><div class="cell-label">1人あたり利益</div><div class="cell-val" id="kHead">—</div></div>
     </div>
-    <div class="result-summary" id="verdict"></div>
   </div>
 
   <div class="sec">
@@ -350,10 +347,6 @@ button:focus-visible{outline:2px solid var(--g2);outline-offset:1px}
     set("bep", bep === null ? "算出不可" : nf.format(bep) + "名", false);
     set("bepGap", gap === null ? "—" : (gap >= 0 ? "+" : "") + nf.format(gap) + "名", gap !== null && gap < 0);
     set("annual", money(profit * 12), profit < 0);
-
-    var vd = document.getElementById("verdict");
-    vd.className = "result-summary " + (profit >= 0 ? "result-win" : "result-lose");
-    vd.innerHTML = "<span class='result-pl'>" + money(profit) + "</span>";
 
     var maxRoom = Math.max(slot1, slot2);
     var over = maxRoom > v("cap");
